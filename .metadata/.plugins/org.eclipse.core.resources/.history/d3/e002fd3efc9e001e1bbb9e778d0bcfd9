@@ -1,0 +1,5 @@
+package com.cc.exception;
+
+public class AdminException extends Exception {
+
+}

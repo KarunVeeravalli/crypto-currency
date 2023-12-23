@@ -1,0 +1,18 @@
+package com.cc.model;
+
+import java.util.Collection;
+
+
+public class AuthResponse {
+	
+	private Integer userId;
+	
+	private String accessToken;
+	
+	private String refreshToken;
+	
+	private Long expiredAt;
+
+    private Collection<String> authorities;
+	
+}

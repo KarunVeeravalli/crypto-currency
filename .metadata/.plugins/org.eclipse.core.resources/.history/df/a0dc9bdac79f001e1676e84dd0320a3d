@@ -1,0 +1,19 @@
+package com.cc.feign;
+
+import java.util.List;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.cc.entity.UnAuthUser;
+import com.cc.exception.AdminException;
+import com.cc.exception.UnAuthUserException;
+
+@FeignClient("UNAUTHUSER-SERVICE")
+public interface UnAuthUserExternalService {
+	
+	
+	@GetMapping("/unauth/getUnAuthUserByStatus/{status}")
+	public List<UnAuthUser> getUnauAuthUserByStatus(@PathVariable String status) ;
+}

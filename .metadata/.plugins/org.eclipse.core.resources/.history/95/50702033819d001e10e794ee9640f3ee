@@ -1,0 +1,59 @@
+package com.cc.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.cc.dto.Btw;
+import com.cc.entity.Wallet;
+import com.cc.exception.BankException;
+import com.cc.exception.UserException;
+import com.cc.exception.WalletException;
+import com.cc.repository.WalletRepository;
+
+public class WalletServiceImpl implements WalletService{
+	
+	@Autowired
+	WalletRepository repository;
+
+	@Override
+	public Wallet addMoneyToWallet(Integer userId, Btw addMoneyFromBankToWallet)
+			throws UserException, WalletException, BankException {
+		Wallet wallet = getWalletByUserId(userId);
+		
+		//here we have to create transaction
+		wallet.setAvailableAmount(wallet.getAvailableAmount()+addMoneyFromBankToWallet.getAmount());
+		return wallet;
+	}
+
+	@Override
+	public Wallet takeMoneyFromWallet(Integer userId, Btw sendMoneyFromWalletToBank)
+			throws UserException, WalletException, BankException {
+		Wallet wallet = getWalletByUserId(userId);
+		
+		//here we have to create transaction
+		if(sendMoneyFromWalletToBank.getAmount()<=wallet.getAvailableAmount()) {
+			wallet.setAvailableAmount(wallet.getAvailableAmount()-sendMoneyFromWalletToBank.getAmount());
+		}
+		else {
+			throw new WalletException("not suffient funds in your wallet");
+		}
+		return wallet;
+	}
+
+	@Override
+	public Wallet getWalletByUserId(Integer userId) throws UserException, WalletException {
+		return repository.findByUserId(userId);
+	}
+
+	@Override
+	public Wallet getWalletById(Integer userId, Integer walletId) throws UserException, WalletException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Wallet deleteWalletById(Integer userId, Integer walletId) throws UserException, WalletException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

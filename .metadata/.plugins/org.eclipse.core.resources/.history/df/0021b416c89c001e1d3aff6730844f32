@@ -1,0 +1,44 @@
+package com.cc.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.cc.dto.UsersDto;
+import com.cc.entity.Users;
+import com.cc.exception.UsersException;
+
+@Service
+public class UsersServiceImpl implements UsersService {
+
+	@Override
+	public Users getUser(Integer id) throws UsersException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Users addUser(Users user) throws UsersException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Users updateUser(UsersDto newUserDetails, Integer id) throws UsersException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Users deleteUser(Integer id) throws UsersException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Users> getAllUsers() throws UsersException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

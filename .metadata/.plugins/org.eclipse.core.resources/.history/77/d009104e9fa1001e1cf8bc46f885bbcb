@@ -1,0 +1,10 @@
+package com.cc.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.cc.entity.UserEntity;
+import com.google.common.base.Optional;
+
+public interface UserRepository extends JpaRepository<UserEntity, Integer>{
+	Optional<UserEntity> findByName(String username);
+}

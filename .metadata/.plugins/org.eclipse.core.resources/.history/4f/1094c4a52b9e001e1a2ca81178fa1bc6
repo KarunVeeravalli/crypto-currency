@@ -1,0 +1,15 @@
+package com.cc.feignServices;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.cc.utilityHelper.GeneralResponse;
+
+@FeignClient("COIN-SERVICE")
+public interface CoinExternalService {
+	
+	@GetMapping("/coin/getCoinById/{id}")
+	public ResponseEntity<GeneralResponse> getCoinById(@PathVariable Integer id);
+}

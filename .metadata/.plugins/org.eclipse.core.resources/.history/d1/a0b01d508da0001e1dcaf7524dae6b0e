@@ -1,0 +1,39 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**
+
+        - id: BANK-SERVICE
+          uri: lb://BANK-SERVICE
+          predicates:
+            - Path=/bank/**
+
+        - id: COIN-SERVICE
+          uri: lb://COIN-SERVICE
+          predicates:
+            - Path=/coin/**
+        
+        - id: COIN-WALLET-SERVICE
+          uri: lb://COIN-WALLET-SERVICE
+          predicates:
+            - Path=/coinWallet/**
+            
+        - id: TRANSACTION-SERVICE
+          uri: lb://TRANSACTION-SERVICE
+          predicates:
+            - Path=/transaction/**
+            
+        - id: WALLET-SERVICE
+          uri: lb://WALLET-SERVICE
+          predicates:
+            - Path=/wallet/**
+          
+        - id: UNAUTHUSER-SERVICE
+          uri: lb://UNAUTHUSER-SERVICE
+          predicates:
+            - Path=/unauth/**
+        

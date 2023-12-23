@@ -1,0 +1,84 @@
+package com.cc.service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cc.dto.PasswordChangeDto;
+import com.cc.dto.UsersDto;
+import com.cc.entity.Bank;
+import com.cc.entity.Users;
+import com.cc.exception.UsersException;
+import com.cc.feign.BankExternalServices;
+import com.cc.repository.UserRepository;
+import com.cc.utilityHelper.RepoHelper;
+
+@Service
+public class UsersServiceImpl implements UsersService {
+	
+	@Autowired
+	UserRepository repository;
+	
+	@Autowired
+	BankExternalServices externalServices;
+	
+	@Autowired
+	RepoHelper helper;
+
+	@Override
+	public Users getUser(Integer id) throws UsersException {
+		Users user = repository.findById(id).get();
+		List<Bank> banks = (List<Bank>) externalServices.getAllBanksByUserId(id).getBody().getData(); 
+		user.setBank(banks);
+		return user;
+	}
+
+	@Override
+	public Users addUser(UsersDto dto) throws UsersException {
+		Users user = new Users();
+		user.setUsername(dto.getFirstname()+dto.getMobileNumber().toString().substring(0, 3));
+		user.setAadhar(dto.getAadhar());
+		user.setEncodedPassword(dto.getPassword());
+		user.setEmail(dto.getEmail());
+		user.setFirstname(dto.getFirstname());
+		user.setPanNum(dto.getPanNum());
+		user.setMobileNumber(dto.getMobileNumber());
+		user.setCreatedTimeStamp(LocalDate.now());
+		user.setRole("general");
+		return repository.save(user);
+	}
+
+	@Override
+	public Users updateUser(UsersDto newUserDetails, Integer id) throws UsersException {
+		Users oldUserDetails = getUser(id); 
+		BeanUtils.copyProperties(newUserDetails, oldUserDetails, helper.getNullPropertyNames(newUserDetails));
+		return repository.save(oldUserDetails);
+	}
+
+	@Override
+	public Users deleteUser(Integer id) throws UsersException {
+		Users user = getUser(id);
+		repository.deleteById(id);
+		return user;
+	}
+
+	@Override
+	public List<Users> getAllUsers() throws UsersException {
+		return repository.findAll();
+	}
+
+	@Override
+	public Users changePassword(PasswordChangeDto dto,Integer id) throws UsersException {
+		Users user = getUser(id);
+	 	 if(dto.getCurrentPassword().equals(user.getEncodedPassword())) {
+				user.setEncodedPassword(dto.getNewPassword());
+	 	 }
+	 	 return repository.save(user);
+	}
+	
+	
+
+}

@@ -1,0 +1,60 @@
+package com.cc.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cc.dto.PasswordChangeDto;
+import com.cc.dto.UsersDto;
+import com.cc.entity.Users;
+import com.cc.exception.UsersException;
+import com.cc.service.UsersService;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+	
+	@Autowired
+	UsersService service;
+	
+	
+	@GetMapping("/getUser/{id}")
+	public Users getUser(@PathVariable Integer id) throws UsersException{
+		return service.getUser(id);
+	}
+	
+	@PostMapping("/addUser")
+	public Users addUser(@RequestBody UsersDto dto) throws UsersException{
+		return service.addUser(dto);
+	}
+	
+	@PutMapping("/updateUser/{id}")
+	public Users updateUser(@RequestBody UsersDto newUserDetails,@PathVariable Integer id) throws UsersException{
+		return service.updateUser(newUserDetails, id);
+	}
+	
+	@DeleteMapping("/deleteUser/{id}")
+	public Users deleteUser(@PathVariable Integer id) throws UsersException{
+		return service.deleteUser(id);
+	}
+	
+	@GetMapping("/getAllUsers")
+	public List<Users> getAllUsers() throws UsersException{
+		return service.getAllUsers();
+	}
+	
+	@PutMapping("/changePassword/{id}")
+	public Users changePassword(@RequestBody PasswordChangeDto dto,@PathVariable Integer id) throws UsersException{
+		return service.changePassword(dto, id);
+	}
+	
+	
+}

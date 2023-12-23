@@ -1,0 +1,137 @@
+package com.cc.service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.apache.catalina.User;
+import org.springframework.aop.ThrowsAdvice;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.cc.dto.PasswordChangeDto;
+import com.cc.dto.UsersDto;
+import com.cc.entity.Bank;
+import com.cc.entity.CoinWallet;
+import com.cc.entity.Transaction;
+import com.cc.entity.UnAuthUser;
+import com.cc.entity.Users;
+import com.cc.entity.Wallet;
+import com.cc.exception.AdminException;
+import com.cc.exception.UnAuthUserException;
+import com.cc.exception.UsersException;
+import com.cc.feign.BankExternalServices;
+import com.cc.feign.CoinWalletExternalService;
+import com.cc.feign.TransactionExternalService;
+import com.cc.feign.UnAuthUserExternalService;
+import com.cc.feign.WalletExternalService;
+import com.cc.repository.UserRepository;
+import com.cc.utilityHelper.GeneralResponse;
+import com.cc.utilityHelper.RepoHelper;
+
+@Service
+public class UsersServiceImpl implements UsersService {
+	
+	@Autowired
+	UserRepository repository;
+	
+	@Autowired
+	BankExternalServices externalServices;
+	
+	@Autowired
+	WalletExternalService walletExternalService;
+	
+	@Autowired
+	CoinWalletExternalService coinWalletExternalService;
+	
+	@Autowired
+	TransactionExternalService transactionExternalService;
+	
+	@Autowired
+	UnAuthUserExternalService unAuthUserExternalService;
+	
+	@Autowired
+	RepoHelper helper;
+
+	@Override
+	public Users getUser(Integer id) throws UsersException {
+		Users user = repository.findById(id).get();
+		List<Bank> banks = externalServices.getAllBanksByUserId(id); 
+		Wallet wallet = walletExternalService.getWalletByUserId(id);
+		CoinWallet coinWallet = coinWalletExternalService.getCoinWalletByUserId(id);
+		ResponseEntity<GeneralResponse> transactionResponse = transactionExternalService.getAllTransactionsByUserId(id);
+		List<Transaction> transactions = (List<Transaction>) transactionResponse.getBody().getData();
+		user.setWallet(wallet);
+		user.setBank(banks);
+		user.setCoinWallet(coinWallet);
+		user.setTransactions(transactions);
+		return user;		
+	}
+	@Override
+	public Users addUser(UsersDto dto) throws UsersException {
+		Users user = new Users();
+		user.setUsername(dto.getFirstname()+dto.getMobileNumber().toString().substring(0, 3));
+		user.setAadhar(dto.getAadhar());
+		user.setEncodedPassword(dto.getPassword());
+		user.setEmail(dto.getEmail());
+		user.setFirstname(dto.getFirstname());
+		user.setPanNum(dto.getPanNum());
+		user.setMobileNumber(dto.getMobileNumber());
+		user.setCreatedTimeStamp(LocalDate.now());
+		user.setRole("general");
+		Users newUser = repository.save(user);
+		user.setWallet(walletExternalService.addWallet(newUser.getId()));
+		user.setCoinWallet(coinWalletExternalService.addCoinWallet(newUser.getId()));
+		return user;
+	}
+
+	@Override
+	public Users updateUser(UsersDto newUserDetails, Integer id) throws UsersException {
+		Users oldUserDetails = getUser(id); 
+		BeanUtils.copyProperties(newUserDetails, oldUserDetails, helper.getNullPropertyNames(newUserDetails));
+		return repository.save(oldUserDetails);
+	}
+
+	@Override
+	public Users deleteUser(Integer id) throws UsersException {
+		Users user = getUser(id);
+		walletExternalService.deleteWalletById(user.getWallet().getId());
+		coinWalletExternalService.deleteCoinWallet(user.getCoinWallet().getId());
+		repository.deleteById(id);
+		return user;
+	}
+
+	@Override
+	public List<Users> getAllUsers() throws UsersException {
+		return repository.findAll();
+	}
+
+	@Override
+	public Users changePassword(PasswordChangeDto dto,Integer id) throws UsersException {
+		Users user = getUser(id);
+	 	 if(dto.getCurrentPassword().equals(user.getEncodedPassword())) {
+				user.setEncodedPassword(dto.getNewPassword());
+	 	 }
+	 	 return repository.save(user);
+	}
+	@Override
+	public List<UnAuthUser> getAllUnAuthUsers(Integer id) throws UsersException,AdminException {
+		Users admin = getUser(id);
+		if(admin.getRole()=="ADMIN") {
+
+			return unAuthUserExternalService.getUnauAuthUserByStatus("PENDING");
+		}else {
+			throw new AdminException("Admin not found with id: "+id);
+		}
+	}
+	@Override
+	public Users addUserByUnauthUser(Integer id, Integer unuathId)
+			throws UsersException, UnAuthUserException, AdminException {
+		
+		return null;
+	}
+	
+	
+
+}

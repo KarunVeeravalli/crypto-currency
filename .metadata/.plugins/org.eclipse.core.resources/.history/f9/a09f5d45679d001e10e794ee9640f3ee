@@ -1,0 +1,55 @@
+package com.cc.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cc.dto.CoinDto;
+import com.cc.entites.Coins;
+import com.cc.exception.CoinException;
+import com.cc.service.CoinService;
+
+@RestController
+@RequestMapping("/coin")
+public class CoinController {
+	
+	@Autowired
+	CoinService coinService;
+	
+	@GetMapping("/getCoinById/{id}")
+	public Coins getCoinById(@PathVariable Integer id) throws CoinException{
+		return coinService.getCoinById(id);
+	}
+	
+	@PostMapping("/addCoin")
+	public Coins addCoin(@RequestBody CoinDto coin) throws CoinException{
+		return coinService.addCoin(coin);
+	}
+	
+//	@PostMapping("/addCoins")
+	@RequestMapping(method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE,headers = "addCoins")
+	public List<String> addCoins(@RequestBody List<CoinDto> coins) throws CoinException{
+		return coinService.addCoins(coins);
+	}
+	
+	@DeleteMapping("/deleteCoinById")
+	public Coins deleteCoinById(Integer id) throws CoinException{
+		return coinService.deleteCoinById(id);
+	}
+	
+	@GetMapping("/getAllCoins")
+	public List<Coins> getAllCoins() throws CoinException{
+		return coinService.getAllCoins();
+	}
+	
+
+}

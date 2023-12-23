@@ -1,0 +1,5 @@
+package com.cc.feignServices;
+
+public interface WalletExternalService {
+
+}

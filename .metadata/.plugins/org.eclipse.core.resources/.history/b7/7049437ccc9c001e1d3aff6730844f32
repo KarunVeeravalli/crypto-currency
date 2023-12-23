@@ -1,0 +1,65 @@
+package com.cc.service;
+
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cc.dto.PasswordChangeDto;
+import com.cc.dto.UsersDto;
+import com.cc.entity.Users;
+import com.cc.exception.UsersException;
+import com.cc.repository.UserRepository;
+import com.cc.utilityHelper.RepoHelper;
+
+@Service
+public class UsersServiceImpl implements UsersService {
+	
+	@Autowired
+	UserRepository repository;
+	
+	@Autowired
+	RepoHelper helper;
+
+	@Override
+	public Users getUser(Integer id) throws UsersException {
+		return repository.findById(id).orElseThrow(()-> new UsersException("Users not found with id: "+id));
+	}
+
+	@Override
+	public Users addUser(Users user) throws UsersException {
+		return repository.save(user);
+	}
+
+	@Override
+	public Users updateUser(UsersDto newUserDetails, Integer id) throws UsersException {
+		Users oldUserDetails = getUser(id); 
+		BeanUtils.copyProperties(newUserDetails, oldUserDetails, helper.getNullPropertyNames(newUserDetails));
+		return repository.save(oldUserDetails);
+	}
+
+	@Override
+	public Users deleteUser(Integer id) throws UsersException {
+		Users user = getUser(id);
+		repository.deleteById(id);
+		return user;
+	}
+
+	@Override
+	public List<Users> getAllUsers() throws UsersException {
+		return repository.findAll();
+	}
+
+	@Override
+	public Users changePassword(PasswordChangeDto dto,Integer id) throws UsersException {
+		Users user = getUser(id);
+	 	 if(dto.getCurrentPassword().equals(user.getEncodedPassword())) {
+				user.setEncodedPassword(dto.getNewPassword());
+	 	 }
+	 	 return user;
+	}
+	
+	
+
+}

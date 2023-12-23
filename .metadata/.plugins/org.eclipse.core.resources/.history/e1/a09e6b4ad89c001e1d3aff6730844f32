@@ -1,0 +1,5 @@
+package com.cc.repository;
+
+public class BankRepository {
+
+}

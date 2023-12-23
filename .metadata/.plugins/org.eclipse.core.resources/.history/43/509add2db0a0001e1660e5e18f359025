@@ -1,0 +1,25 @@
+package com.cc.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+
+@EnableWebFluxSecurity
+@Configuration
+public class WebSecurityConfig {
+	
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
+
+        security.authorizeHttpRequests()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .oauth2ResourceServer()
+                .jwt();
+
+        return security.build();
+
+    }
+
+}

@@ -1,0 +1,17 @@
+package com.cc.service;
+
+import com.cc.dto.UsersDto;
+import com.cc.entity.Users;
+import com.cc.exception.UsersException;
+
+public interface UsersService {
+	
+	
+	public Users getUser(Integer id) throws UsersException;
+	
+	public Users addUser(Users user) throws UsersException;
+	
+	public Users updateUser(UsersDto newUserDetails,Integer id) throws UsersException;
+	
+	
+}

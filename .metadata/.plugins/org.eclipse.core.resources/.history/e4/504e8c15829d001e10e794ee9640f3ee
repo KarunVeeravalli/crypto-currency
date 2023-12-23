@@ -1,0 +1,46 @@
+package com.cc.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cc.dto.Btw;
+import com.cc.entity.Wallet;
+import com.cc.exception.BankException;
+import com.cc.exception.UserException;
+import com.cc.exception.WalletException;
+import com.cc.service.WalletService;
+import com.cc.utilityHelper.GeneralResponse;
+
+@RestController
+@RequestMapping("/wallet")
+public class WalletController { 
+	
+	@Autowired
+	WalletService service;
+	
+	ResponseEntity<GeneralResponse> addMoneyToWallet(Integer userId,Btw addMoneyFromBankToWallet) throws UserException,WalletException,BankException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		generalResponse.setMessage("Money has been added to the wallet by user Id: "+userId);
+		generalResponse.setData(service.addMoneyToWallet(userId, addMoneyFromBankToWallet));
+		return ResponseEntity.ok(generalResponse);
+	}
+	
+	ResponseEntity<GeneralResponse> takeMoneyFromWallet(Integer userId, Btw sendMoneyFromWalletToBank) throws UserException,WalletException,BankException{
+		
+	}
+	
+	ResponseEntity<GeneralResponse> getWalletByUserId(Integer userId) throws UserException,WalletException{
+		
+	}
+	
+	ResponseEntity<GeneralResponse> getWalletById(Integer walletId) throws UserException,WalletException{
+		
+	}
+	
+	ResponseEntity<GeneralResponse> deleteWalletById(Integer walletId) throws UserException,WalletException{
+		
+	}
+	
+}

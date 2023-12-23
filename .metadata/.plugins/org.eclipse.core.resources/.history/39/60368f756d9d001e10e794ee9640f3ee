@@ -1,0 +1,87 @@
+package com.cc.controller;
+
+import java.security.Principal;
+import java.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cc.Exception.TransactionalException;
+import com.cc.entity.Transaction;
+import com.cc.service.TransactionService;
+import com.cc.utilityHelper.GeneralResponse;
+
+@RestController
+@RequestMapping("/transaction")
+public class TransactionController {
+	
+	@Autowired
+	TransactionService transactionService;
+	
+	@PostMapping("/addTransaction")
+	private ResponseEntity<GeneralResponse> addTransaction(@RequestBody Transaction transactions) throws TransactionalException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		generalResponse.setMessage("Transaction was added by user Id: "+transactions.getUserId());
+		generalResponse.setData(transactionService.addTransaction(transactions));
+		return ResponseEntity.ok(generalResponse);
+	}
+	
+	@GetMapping("/getTransaction/{userId}/{transactionId}")
+	private ResponseEntity<GeneralResponse> getTransaction(@PathVariable Integer userId,@PathVariable Integer transactionId, Principal user) throws TransactionalException,UsersException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		generalResponse.setMessage("Transaction was found by user Id: "+userId);
+		generalResponse.setData(transactionService.getTransaction(userId, transactionId, user));
+		return ResponseEntity.ok(generalResponse);
+	}
+	
+	@DeleteMapping("/deleteTransaction/{userId}/{transactionId}")
+	private ResponseEntity<GeneralResponse> deleteTransaction(@PathVariable Integer userId,@PathVariable Integer transactionId, Principal user) throws TransactionalException,UsersException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		generalResponse.setMessage("Transaction was selled by user Id: "+userId);
+		generalResponse.setData(transactionService.deleteTransaction(userId, transactionId, user));
+		return ResponseEntity.ok(generalResponse);
+	}
+	
+	@PutMapping("/updateTransaction/{userId}/{transactionId}")
+	private ResponseEntity<GeneralResponse> updateTransaction(@PathVariable Integer userId,@PathVariable Integer transactionId,@RequestBody Transactions transactions,Principal user) throws TransactionalException,UsersException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		generalResponse.setMessage("Crypto coins was update by user Id: "+userId);
+		generalResponse.setData(transactionService.updateTransaction(userId, transactionId, transactions, user));
+		return ResponseEntity.ok(generalResponse);
+	}
+	
+	@GetMapping("/getAllTransactionsByUserId/{userId}")
+	private ResponseEntity<GeneralResponse> getAllTransactionsByUserId(@PathVariable Integer userId,Principal user) throws TransactionalException,UsersException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		generalResponse.setMessage("All Transaction was found by user Id: "+userId);
+		generalResponse.setData(transactionService.getAllTransactionsByUserId(userId, user));
+		return ResponseEntity.ok(generalResponse);
+	}
+	
+	@GetMapping("/getAllTransactionsByDateAndUserId/{userId}/{date}")
+	private ResponseEntity<GeneralResponse> getAllTransactionsByDateAndUserId(@PathVariable Integer userId,@PathVariable LocalDate date,Principal user) throws UsersException,TransactionalException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		generalResponse.setMessage("All Transaction was found by user Id: "+userId+" by date: "+date);
+		generalResponse.setData(transactionService.getAllTransactionsByDateAndUserId(userId, date, user));
+		return ResponseEntity.ok(generalResponse);
+	}
+	
+	@GetMapping("/getAllTransactionByFromDateToDate/{userId}/{fromDate}/{toDate}")
+	private ResponseEntity<GeneralResponse> getAllTransactionByFromDateToDate(@PathVariable Integer userId,@PathVariable LocalDate fromDate,@PathVariable LocalDate toDate,Principal user) throws UsersException,TransactionalException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		generalResponse.setMessage("All Transaction was found by user Id: "+userId+"from date: "+fromDate+" to date: "+toDate);
+		generalResponse.setData(transactionService.getAllTransactionByFromDateToDate(userId, fromDate, toDate, user));
+		return ResponseEntity.ok(generalResponse);
+	}
+	
+	
+	
+}

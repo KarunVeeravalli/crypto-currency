@@ -1,0 +1,9 @@
+package com.cc.dto;
+
+public class AddCoinToWalletDto {
+	private Integer userId;
+	
+	private Integer coinId;
+	
+	private Integer quantity;
+}

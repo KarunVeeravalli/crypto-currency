@@ -1,0 +1,48 @@
+package com.cc.controller;
+
+import javax.smartcardio.ResponseAPDU;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cc.entity.CoinWallet;
+import com.cc.exception.CoinException;
+import com.cc.exception.CoinWalletException;
+import com.cc.exception.UserException;
+import com.cc.exception.WalletException;
+import com.cc.utilityHelper.GeneralResponse;
+
+@RestController
+@RequestMapping("/coinWallet")
+public class CoinWalletController {
+	
+	public ResponseEntity<GeneralResponse> addCryptoCoinsToWalletByQuantity(Integer userId, Integer cryptoId,Integer quantity) throws CoinException,CoinWalletException,UserException, WalletException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		
+		return new ResponseEntity<generalResponse>;
+	}
+	
+	public ResponseEntity<GeneralResponse> getCoinWalletByUserId(Integer userId) throws CoinWalletException,UserException{
+		
+	}
+	
+	public ResponseEntity<GeneralResponse> getCoinWallet(Integer cryptoWalletId) throws CoinWalletException,UserException{
+		
+	}
+	
+	public ResponseEntity<GeneralResponse> deleteCoinWallet(Integer cryptoWalletId) throws CoinWalletException,UserException{
+		
+	}
+	
+	public ResponseEntity<GeneralResponse> deleteCryptoCoinsFromWalletByQuantity( Integer cryptoCoinId,Double quantity) throws CoinException,CoinWalletException,UserException{
+		
+	}
+	
+	public ResponseEntity<GeneralResponse> deleteCryptoCoinsFromWalletByAmount(Integer cryptoCoinId,Double Amount) throws CoinException,CoinWalletException,UserException{
+		
+	}
+
+	
+	
+}

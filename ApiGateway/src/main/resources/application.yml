@@ -1,0 +1,72 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**
+          filters:
+           - AuthFilter
+
+        - id: BANK-SERVICE
+          uri: lb://BANK-SERVICE
+          predicates:
+            - Path=/bank/**
+          filters:
+           - AuthFilter
+
+        - id: COIN-SERVICE
+          uri: lb://COIN-SERVICE
+          predicates:
+            - Path=/coin/**
+          filters:
+           - AuthFilter
+        
+        - id: COIN-WALLET-SERVICE
+          uri: lb://COIN-WALLET-SERVICE
+          predicates:
+            - Path=/coinWallet/**
+          filters:
+           - AuthFilter
+            
+        - id: TRANSACTION-SERVICE
+          uri: lb://TRANSACTION-SERVICE
+          predicates:
+            - Path=/transaction/**
+          filters:
+           - AuthFilter
+            
+        - id: WALLET-SERVICE
+          uri: lb://WALLET-SERVICE
+          predicates:
+            - Path=/wallet/**
+          filters:
+           - AuthFilter
+          
+        - id: UNAUTHUSER-SERVICE
+          uri: lb://UNAUTHUSER-SERVICE
+          predicates:
+            - Path=/unauth/**
+          filters:
+           - AuthFilter
+            
+        - id: SECURITY-SERVICE
+          uri: lb://SECURITY-SERVICE
+          predicates:
+            - Path=/auth/**
+        
+       
+        
+        
+#okta:
+#  oauth2:
+#    issuer: https://dev-28254903.okta.com/oauth2/default
+#    audience: api://default
+#    client-id: 0oae21l60nnrVCY9X5d7
+#    client-secret: enomCuH26Qd-SjwW8Ttwia63KgqbwdFf2_k1igfrbwygn5By8QTXIN1xfnrniB_y
+#    scopes: openid, profile, email, offline_access
+#    
+    
+    
+    

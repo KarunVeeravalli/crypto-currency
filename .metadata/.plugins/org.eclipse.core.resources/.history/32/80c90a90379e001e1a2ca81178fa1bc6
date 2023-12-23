@@ -1,0 +1,5 @@
+package com.cc.feignClient;
+
+public interface BankExternalService {
+
+}

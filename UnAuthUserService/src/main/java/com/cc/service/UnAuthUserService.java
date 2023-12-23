@@ -1,0 +1,24 @@
+package com.cc.service;
+
+import java.util.List;
+
+import com.cc.dto.RegistrationDto;
+import com.cc.entity.UnAuthUser;
+import com.cc.exception.AdminException;
+import com.cc.exception.UnAuthUserException;
+
+public interface UnAuthUserService {
+	
+	public UnAuthUser addUnAuthUser(RegistrationDto user) throws UnAuthUserException;
+	
+	public UnAuthUser getUnAuthUserById(Integer id) throws UnAuthUserException;
+	
+	public UnAuthUser getUnAuthUserByEmail(String mail) throws UnAuthUserException;
+	
+	public List<UnAuthUser> getUnauAuthUserByStatus(String status) throws UnAuthUserException, AdminException;
+	
+	public UnAuthUser deleteUnAuthUserById(Integer id) throws UnAuthUserException;
+	
+	public String rejectUserById(Integer id) throws UnAuthUserException;
+	
+}

@@ -1,0 +1,19 @@
+package com.cc.feign;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.cc.Exception.BankException;
+import com.cc.utilityHelper.GeneralResponse;
+
+@FeignClient("BANK-SERVICE")
+public interface ExternalServices {
+	
+
+	
+	@GetMapping("/getAllBanksByUserId/{userId}")
+	private ResponseEntity<GeneralResponse> getAllBanksByUserId(@PathVariable Integer userId) ;
+
+}
