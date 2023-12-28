@@ -1,5 +1,0 @@
-package com.cc.Exception;
-
-public class UserException extends Exception {
-
-}

@@ -1,5 +1,6 @@
 package com.cc.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +16,7 @@ public class Wallet {
 
 	private Integer id;
 	
+	@Column(columnDefinition = "DOUBLE DEFAULT 0.0")
 	private Double availableAmount;
 	
 	private Integer userId;

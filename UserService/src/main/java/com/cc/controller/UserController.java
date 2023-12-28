@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cc.dto.LoginDto;
 import com.cc.dto.PasswordChangeDto;
 import com.cc.dto.UsersDto;
 import com.cc.entity.Users;
@@ -47,11 +48,8 @@ public class UserController {
     }
 	
 	@PostMapping("/addUser")
-	public ResponseEntity<GeneralResponse> addUser(@RequestBody UsersDto dto) throws UsersException{
-		GeneralResponse generalResponse = new GeneralResponse();
-		generalResponse.setMessage(dto.getFirstname()+" was added");
-		generalResponse.setData(service.addUser(dto));
-		return ResponseEntity.ok(generalResponse);
+	public Users addUser(@RequestBody UsersDto dto) throws UsersException{
+		return (service.addUser(dto));
 	}
 	
 	@PutMapping("/updateUser/{id}")
@@ -103,5 +101,11 @@ public class UserController {
 	public String rejectUnAuthUser(@PathVariable Integer id,@PathVariable Integer unauthId) throws UsersException, UnAuthUserException, AdminException {
 		return service.rejectUnAuthUser(id, unauthId);
 	}
+	
+	@GetMapping("/getCredentials/{email}")
+	public LoginDto getCredentials(@PathVariable String email) throws UsersException{
+		return service.getCredentials(email);
+	}
+	
 	
 }

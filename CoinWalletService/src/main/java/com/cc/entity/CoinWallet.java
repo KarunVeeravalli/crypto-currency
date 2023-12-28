@@ -1,15 +1,14 @@
 package com.cc.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
@@ -29,10 +28,13 @@ public class CoinWallet {
 	
 	private Integer userId;
 	
+	@Column(columnDefinition = "DOUBLE DEFAULT 0.0")
 	private Double profit;
 	
+	@Column(columnDefinition = "DOUBLE DEFAULT 0.0")
 	private Double investedAmount;
 	
+	@Column(columnDefinition = "DOUBLE DEFAULT 0.0")
 	private Double totalCryptoValue;
 	
 	

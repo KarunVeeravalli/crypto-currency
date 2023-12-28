@@ -1,5 +1,0 @@
-package com.cc.exception;
-
-public class WalletException extends Exception {
-
-}

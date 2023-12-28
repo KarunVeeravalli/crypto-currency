@@ -27,7 +27,7 @@ resilience4j:
 
   retry:
     instances:
-      ratingHotelService:
+      CoinWalletExternalService:
         max-attempts: 3
         wait-duration: 5s
         

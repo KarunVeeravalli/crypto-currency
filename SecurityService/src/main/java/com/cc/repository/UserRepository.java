@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.cc.entity.UserEntity;
+import com.cc.entity.UserCredentials;
 
-public interface UserRepository extends JpaRepository<UserEntity, Integer>{
-	Optional<UserEntity> findByEmail(String username);
+public interface UserRepository extends JpaRepository<UserCredentials, Integer>{
+	Optional<UserCredentials> findByEmail(String username);
 }

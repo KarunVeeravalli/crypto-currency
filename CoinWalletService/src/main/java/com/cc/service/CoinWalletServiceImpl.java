@@ -1,5 +1,6 @@
 package com.cc.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +107,12 @@ public class CoinWalletServiceImpl implements CoinWalletService{
 	public CoinWallet addCoinWallet(Integer userId) throws CoinWalletException, UserException {
 		CoinWallet coinWallet = new CoinWallet();
 		coinWallet.setUserId(userId);
+		List<Integer> coins = new ArrayList<>();
+		coins.add(0);
+		coinWallet.setCoins(coins);
+		coinWallet.setInvestedAmount(0.0);
+		coinWallet.setProfit(0.0);
+		coinWallet.setTotalCryptoValue(0.0);
 		return repository.save(coinWallet);
 	}
 

@@ -1,5 +1,0 @@
-package com.cc.feignServices;
-
-public interface CoinExternalService {
-
-}

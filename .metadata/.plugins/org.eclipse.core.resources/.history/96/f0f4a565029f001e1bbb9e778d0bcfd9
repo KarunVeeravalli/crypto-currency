@@ -1,9 +1,0 @@
-package com.cc.repository;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.cc.entity.UnAuthUser;
-
-public interface UnAuthUserRepository extends JpaRepository<UnAuthUser, Integer>{
-
-}

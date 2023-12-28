@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="bankTransactionBreaker"/>
+		<item key="selection" value=""/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="true"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="//"/>
+			<item value="webflux"/>
 			<item value="bankTransactionBreaker"/>
 			<item value="bankTransactionFallback"/>
 			<item value="CryptoException"/>
@@ -18,9 +20,9 @@
 			<item value="Integer userId,"/>
 		</list>
 		<list key="replacehistory">
+			<item value=""/>
 			<item value="CoinException"/>
 			<item value="UserException"/>
-			<item value=""/>
 			<item value="CoinWallet"/>
 			<item value="repository"/>
 			<item value="Transaction"/>
@@ -32,5 +34,9 @@
 		<item key="DIALOG_WIDTH" value="357"/>
 		<item key="DIALOG_HEIGHT" value="408"/>
 		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="406"/>
+		<item key="DIALOG_Y_ORIGIN" value="205"/>
 	</section>
 </section>

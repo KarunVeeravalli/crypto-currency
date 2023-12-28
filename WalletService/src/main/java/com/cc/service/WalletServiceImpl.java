@@ -100,6 +100,7 @@ public class WalletServiceImpl implements WalletService{
 	public Wallet addWallet(Integer userId) throws UserException, WalletException {
 		Wallet wallet = new Wallet();
 		wallet.setUserId(userId);
+		wallet.setAvailableAmount(0.0);
 		return repository.save(wallet);
 	}
 

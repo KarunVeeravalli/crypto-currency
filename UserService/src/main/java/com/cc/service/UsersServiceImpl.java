@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.cc.dto.LoginDto;
 import com.cc.dto.PasswordChangeDto;
 import com.cc.dto.UsersDto;
 import com.cc.entity.Bank;
@@ -69,18 +70,18 @@ public class UsersServiceImpl implements UsersService {
 	@Override
 	public Users addUser(UsersDto dto) throws UsersException {
 		Users user = new Users();
-		user.setUsername(dto.getFirstname()+dto.getMobileNumber().toString().substring(0, 3));
-		user.setAadhar(dto.getAadhar());
+//		user.setUsername(dto.getFirstname()+dto.getMobileNumber().toString().substring(0, 3));
+//		user.setAadhar(dto.getAadhar());
 		user.setEncodedPassword(dto.getPassword());
 		user.setEmail(dto.getEmail());
-		user.setFirstname(dto.getFirstname());
-		user.setPanNum(dto.getPanNum());
-		user.setMobileNumber(dto.getMobileNumber());
+//		user.setFirstname(dto.getFirstname());
+//		user.setPanNum(dto.getPanNum());
+//		user.setMobileNumber(dto.getMobileNumber());
 		user.setCreatedTimeStamp(LocalDateTime.now());
 		user.setRole("general");
-		user.setAadhaarCard(dto.getAadhaarCard());
-		user.setImage(dto.getImage());
-		user.setPanCard(dto.getPanCard());
+//		user.setAadhaarCard(dto.getAadhaarCard());
+//		user.setImage(dto.getImage());
+//		user.setPanCard(dto.getPanCard());
 		Users newUser = repository.save(user);
 		user.setWallet(walletExternalService.addWallet(newUser.getId()));
 		user.setCoinWallet(coinWalletExternalService.addCoinWallet(newUser.getId()));
@@ -164,6 +165,14 @@ public class UsersServiceImpl implements UsersService {
 		}else {
 			throw new AdminException("Admin not found with id: "+id);
 		}	
+	}
+	@Override
+	public LoginDto getCredentials(String email) throws UsersException {
+		Users user = repository.findByEmail(email);
+		LoginDto dto = new LoginDto();
+		dto.setEmail(user.getEmail());
+		dto.setPassword(user.getEncodedPassword());
+		return dto;
 	}
 	
 	

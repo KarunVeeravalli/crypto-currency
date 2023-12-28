@@ -2,6 +2,7 @@ package com.cc.service;
 
 import java.util.List;
 
+import com.cc.dto.LoginDto;
 import com.cc.dto.PasswordChangeDto;
 import com.cc.dto.UsersDto;
 import com.cc.entity.UnAuthUser;
@@ -31,5 +32,5 @@ public interface UsersService {
 	
 	public String rejectUnAuthUser(Integer id,Integer unauthId) throws UsersException,UnAuthUserException,AdminException;
 
-	
+	public LoginDto getCredentials(String email) throws UsersException;
 }

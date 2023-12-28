@@ -8,7 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.cc.entity.UserEntity;
+import com.cc.dto.LoginDto;
+import com.cc.entity.UserCredentials;
+import com.cc.feignClient.UserExternalService;
 import com.cc.repository.UserRepository;
 
 
@@ -21,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> credential = repository.findByEmail(username);
+        Optional<UserCredentials> credential = repository.findByEmail(username);
         return credential.map(CustomUserDeatils::new).orElseThrow(() -> new UsernameNotFoundException("user not found with name :" + username));
     }
 }
