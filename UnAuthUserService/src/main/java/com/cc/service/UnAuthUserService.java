@@ -13,6 +13,8 @@ public interface UnAuthUserService {
 	
 	public UnAuthUser getUnAuthUserById(Integer id) throws UnAuthUserException;
 	
+	public UnAuthUser updateUserById(Integer id, RegistrationDto dto) throws UnAuthUserException;
+	
 	public UnAuthUser getUnAuthUserByEmail(String mail) throws UnAuthUserException;
 	
 	public List<UnAuthUser> getUnauAuthUserByStatus(String status) throws UnAuthUserException, AdminException;

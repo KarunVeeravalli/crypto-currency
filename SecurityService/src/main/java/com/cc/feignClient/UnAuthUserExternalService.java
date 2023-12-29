@@ -11,6 +11,8 @@ import com.cc.dto.UnAuthUser;
 public interface UnAuthUserExternalService {
 	
 	
-	@PostMapping("/addUnAuthUser")
+	@PostMapping("/unauth/addUnAuthUser")
 	public UnAuthUser addUnAuthUser(@RequestBody RegistrationDto user);
+	
+	
 }

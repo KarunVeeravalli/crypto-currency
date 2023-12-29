@@ -18,6 +18,8 @@ import com.cc.exception.AdminException;
 import com.cc.exception.UnAuthUserException;
 import com.cc.service.UnAuthUserService;
 
+import jakarta.ws.rs.Path;
+
 @RestController
 @RequestMapping("/unauth")
 public class UnauthController {
@@ -54,5 +56,9 @@ public class UnauthController {
 	public String rejectUserById(@PathVariable Integer id) throws UnAuthUserException{
 		return service.rejectUserById(id);
 	}
-
+	
+	@PutMapping("/updateUnauthUser/{id}")
+	public UnAuthUser updateUnauthUserById(@PathVariable Integer id, @RequestBody RegistrationDto dto) throws UnAuthUserException {
+		return service.updateUserById(id, dto);
+	}
 }

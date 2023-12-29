@@ -1,5 +1,7 @@
 package com.cc.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -13,6 +15,8 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
 
     @Autowired
     private RouteValidator validator;
+    
+    Logger logger = LoggerFactory.getLogger(AuthFilter.class);
 //    
 //    @Autowired
 //    private RestTemplate restTemplate;
@@ -42,6 +46,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
 //                    //REST call to AUTH service
 //                    template.getForObject("http://IDENTITY-SERVICE//validate?token" + authHeader, String.class);
                     jwtUtil.validateToken(authHeader);
+                    logger.info(" user is validating.... ");
 
                 } catch (Exception e) {
                     System.out.println("invalid access...!");

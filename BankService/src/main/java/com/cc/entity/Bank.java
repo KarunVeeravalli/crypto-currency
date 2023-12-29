@@ -31,7 +31,7 @@ public class Bank {
 	
 	private Double amount;
 	
-	@JsonIgnore
+//	@JsonIgnore
 	private Integer userId;
 
 }

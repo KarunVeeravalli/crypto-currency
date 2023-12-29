@@ -18,9 +18,6 @@ import com.cc.exception.WalletException;
 import com.cc.service.WalletService;
 import com.cc.utilityHelper.GeneralResponse;
 
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
-
 
 @RestController
 @RequestMapping("/wallet")
@@ -30,8 +27,6 @@ public class WalletController {
 	WalletService service;
 	
 	@PostMapping("/addMoneyToWallet/{userId}")
-//	@CircuitBreaker(name = "bankTransactionBreaker", fallbackMethod = "bankTransactionFallback")
-	@Retry(name="bankTransactionBreaker",fallbackMethod = "bankTransactionFallback")
 	public Wallet addMoneyToWallet(@PathVariable Integer userId,@RequestBody Btw addMoneyFromBankToWallet) throws UserException,WalletException,BankException{
 		return (service.addMoneyToWallet(userId, addMoneyFromBankToWallet));
 	}

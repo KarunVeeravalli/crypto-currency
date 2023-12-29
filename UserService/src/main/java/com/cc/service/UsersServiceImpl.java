@@ -91,6 +91,7 @@ public class UsersServiceImpl implements UsersService {
 	@Override
 	public Users updateUser(UsersDto newUserDetails, Integer id) throws UsersException {
 		Users oldUserDetails = getUser(id); 
+		oldUserDetails.setUsername(newUserDetails.getFirstname()+newUserDetails.getMobileNumber().toString().substring(0, 3));;
 		BeanUtils.copyProperties(newUserDetails, oldUserDetails, helper.getNullPropertyNames(newUserDetails));
 		return repository.save(oldUserDetails);
 	}
@@ -119,8 +120,8 @@ public class UsersServiceImpl implements UsersService {
 	}
 	@Override
 	public List<UnAuthUser> getAllUnAuthUsers(Integer id) throws UsersException,AdminException {
-		Users admin = getUser(id);
-		if(admin.getRole()=="ADMIN") {
+		Users admin = getOnlyUserDetails(id);
+		if(admin.getRole().equals("ADMIN")) {
 
 			return unAuthUserExternalService.getUnauAuthUserByStatus("PENDING");
 		}else {
@@ -134,8 +135,8 @@ public class UsersServiceImpl implements UsersService {
 		if(unAuthUser.equals(null)) {
 			throw new UnAuthUserException("UnAuthUser is not found with id: "+unauthId);
 		}
-		Users admin =  getUser(id);
-		if(admin.getRole()=="ADMIN") {
+		Users admin =  getOnlyUserDetails(id);
+		if(admin.getRole().equals("ADMIN") ){
 			Users user =  new Users();
 			user.setFirstname(unAuthUser.getFirstName());
 			user.setUsername(unAuthUser.getFirstName()+unAuthUser.getMobileNumber().toString().substring(0, 3));
@@ -148,8 +149,11 @@ public class UsersServiceImpl implements UsersService {
 			user.setImage(unAuthUser.getImage());
 			user.setPanCard(unAuthUser.getPanCard());
 			user.setAadhaarCard(unAuthUser.getAadhaarCard());
-			unAuthUserExternalService.deleteUser(unauthId);
-			return repository.save(user);
+			Users newUser = repository.save(user);
+			user.setWallet(walletExternalService.addWallet(newUser.getId()));
+			user.setCoinWallet(coinWalletExternalService.addCoinWallet(newUser.getId()));
+			unAuthUserExternalService.deleteUnAuthUserById(unauthId);
+			return user;
 		}else {
 			throw new AdminException("Admin not found with id: "+id);
 		}
@@ -172,6 +176,22 @@ public class UsersServiceImpl implements UsersService {
 		LoginDto dto = new LoginDto();
 		dto.setEmail(user.getEmail());
 		dto.setPassword(user.getEncodedPassword());
+		return dto;
+	}
+	@Override
+	public Users getOnlyUserDetails(Integer id) throws UsersException {
+		return repository.findById(id).get();
+	}
+	@Override
+	public UsersDto getOnlyUserDetailsDto(Integer id) throws UsersException {
+		UsersDto dto = new UsersDto();
+		Users user = getOnlyUserDetails(id);
+		dto.setEmail(user.getEmail());
+		dto.setMobileNumber(user.getMobileNumber());
+		dto.setPanNum(user.getPanNum());
+		if(user==null) {
+			return null;
+		}
 		return dto;
 	}
 	

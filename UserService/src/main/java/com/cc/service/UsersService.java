@@ -13,6 +13,7 @@ import com.cc.exception.UsersException;
 
 public interface UsersService {
 	
+	public Users getOnlyUserDetails(Integer id) throws UsersException;
 	
 	public Users getUser(Integer id) throws UsersException;
 	
@@ -33,4 +34,6 @@ public interface UsersService {
 	public String rejectUnAuthUser(Integer id,Integer unauthId) throws UsersException,UnAuthUserException,AdminException;
 
 	public LoginDto getCredentials(String email) throws UsersException;
+
+	public UsersDto getOnlyUserDetailsDto(Integer id) throws UsersException;
 }

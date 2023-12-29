@@ -17,6 +17,7 @@ import com.cc.exception.CoinWalletException;
 import com.cc.exception.UserException;
 import com.cc.exception.WalletException;
 import com.cc.feignServices.CoinExternalService;
+import com.cc.feignServices.UserExternalService;
 import com.cc.feignServices.WalletExternalService;
 import com.cc.repository.CoinWalletRepository;
 
@@ -30,13 +31,24 @@ public class CoinWalletServiceImpl implements CoinWalletService{
 	
 	@Autowired
 	CoinExternalService coinExternalService;
+	
+	@Autowired
+	UserExternalService userExternalService;
 
 	@Override
 	public CoinWallet addCryptoCoinsToWalletByQuantity(AddCoinToWalletDto dto)
 			throws CoinException, CoinWalletException, UserException, WalletException {
 		CoinWallet coinWallet = getCoinWalletByUserId(dto.getUserId());
+		if(coinWallet==null) {
+			throw new CoinWalletException("Coin Wallet was not found with user id: "+dto.getUserId());
+		}
+		
 		List<Integer> walletCoins =  coinWallet.getCoins();
 		Coin coin = coinExternalService.getCoinById(dto.getCoinId());
+		if(coin==null) {
+			throw new CoinException("Coin was not found with id: "+dto.getCoinId());
+		}
+		
 		if(coin.getQuantity()>=dto.getQuantity()) {
 			Wallet wallet = walletExternalService.getWalletByUserId(dto.getUserId());
 			if(wallet.getAvailableAmount()>((coin.getPrice())*dto.getQuantity())) {
@@ -67,6 +79,10 @@ public class CoinWalletServiceImpl implements CoinWalletService{
 	@Override
 	public CoinWallet getCoinWalletByUserId(Integer userId) throws CoinWalletException, UserException {
 		CoinWallet coinWallet = repository.findByUserId(userId);
+		if(coinWallet==null) {
+			throw new CoinWalletException("Coin Wallet was not found with user id: "+userId);
+		}
+		
 		Double amount = 0.0;
 		for(int i: coinWallet.getCoins()) {
 			Double coinPrice =  coinExternalService.getCoinById(i).getPrice();
@@ -87,6 +103,9 @@ public class CoinWalletServiceImpl implements CoinWalletService{
 	@Override
 	public CoinWallet deleteCoinWallet(Integer coinWalletId) throws CoinWalletException, UserException {
 		CoinWallet coinWallet = getCoinWallet(coinWalletId);
+		if(coinWallet==null) {
+			throw new CoinWalletException("Coin Wallet was not found with coin Wallet Id: "+coinWalletId);
+		}
 		repository.deleteById(coinWalletId);
 		return coinWallet;
 	}
@@ -105,6 +124,14 @@ public class CoinWalletServiceImpl implements CoinWalletService{
 
 	@Override
 	public CoinWallet addCoinWallet(Integer userId) throws CoinWalletException, UserException {
+		if(getCoinWalletByUserId(userId)!=null) {
+			throw new CoinWalletException("Coin Wallet is already there in Db with userId: "+userId);
+		}
+		
+		if(userExternalService.getOnlyUser(userId)==null) {
+			throw new UserException("User was not found with id: "+userId);
+		}
+		
 		CoinWallet coinWallet = new CoinWallet();
 		coinWallet.setUserId(userId);
 		List<Integer> coins = new ArrayList<>();

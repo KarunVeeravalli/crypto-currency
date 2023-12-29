@@ -6,4 +6,8 @@ import com.cc.entites.Coins;
 
 public interface CoinRepository extends JpaRepository<Coins, Integer>{
 
+	Coins findCoinsByCryptoName(String name);
+	
+	
+
 }

@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cc.dto.AuthRequest;
 import com.cc.dto.EmailDto;
 import com.cc.dto.OtpDto;
+import com.cc.dto.RegistrationDto;
 import com.cc.entity.UnauthUser;
 import com.cc.entity.UserCredentials;
 import com.cc.feignClient.EmailExternalService;
+import com.cc.feignClient.UnAuthUserExternalService;
 import com.cc.service.AuthService;
 import com.cc.service.UnauathUserService;
+import com.netflix.discovery.converters.Auto;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,6 +35,9 @@ public class SecurityController {
     
     @Autowired
     private EmailExternalService emailExternalService;
+    
+    @Autowired
+    private UnAuthUserExternalService unAuthUserExternalService;
     
     @Autowired
     private UnauathUserService unauathUserService;
@@ -59,6 +65,10 @@ public class SecurityController {
     		credentials.setPassword(unAuthUser.getPassword());
     		service.saveUser(credentials);
     		unauathUserService.deleteUser(unAuthUser.getId());
+    		RegistrationDto regDto = new RegistrationDto();
+    		regDto.setEmail(dto.getEmail());
+    		regDto.setPassword(credentials.getPassword());
+    		unAuthUserExternalService.addUnAuthUser(regDto);
     		return "new UnAuthUser was added ";
     	}
     	else {

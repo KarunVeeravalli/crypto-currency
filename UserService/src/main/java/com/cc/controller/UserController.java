@@ -39,6 +39,11 @@ public class UserController {
 		return ResponseEntity.ok(generalResponse);
 	}
 	
+	@GetMapping("/getOnlyUser/{id}")
+	public UsersDto getOnlyUser(@PathVariable Integer id) throws UsersException{
+		return service.getOnlyUserDetailsDto(id);
+	}
+	
 	 public ResponseEntity<GeneralResponse> ratingHotelFallback(String userId, Exception ex) {
        ex.printStackTrace();
        GeneralResponse generalResponse = new GeneralResponse();

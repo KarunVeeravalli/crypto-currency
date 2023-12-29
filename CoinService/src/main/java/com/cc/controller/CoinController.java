@@ -2,6 +2,8 @@ package com.cc.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,11 +24,14 @@ import com.cc.utilityHelper.GeneralResponse;
 @RequestMapping("/coin")
 public class CoinController {
 	
+	Logger logger = LoggerFactory.getLogger(CoinController.class);
+	
 	@Autowired
 	CoinService service;
 	
 	@GetMapping("/getCoinById/{id}")
 	public Coins getCoinById(@PathVariable Integer id) throws CoinException{
+		logger.info("getCointById method was caller in logger controller by coin Id: "+id);
 		return (service.getCoinById(id));
 	}
 	

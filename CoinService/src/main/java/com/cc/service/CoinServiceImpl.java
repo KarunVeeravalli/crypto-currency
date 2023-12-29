@@ -3,6 +3,7 @@ package com.cc.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.core.tools.picocli.CommandLine.Help;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import com.cc.dto.CoinDto;
 import com.cc.entites.Coins;
 import com.cc.exception.CoinException;
 import com.cc.repository.CoinRepository;
+import com.cc.utilityHelper.RepoHelper;
 
 
 @Service
@@ -17,14 +19,25 @@ public class CoinServiceImpl implements CoinService {
 	
 	@Autowired
 	CoinRepository coinRepository;
-
+	
+	@Autowired
+	RepoHelper helper;
+	
 	@Override
 	public Coins getCoinById(Integer id) throws CoinException {
-		return coinRepository.findById(id).get();
+		Coins coin = coinRepository.findById(id).get();
+		if(coin==null) {
+			throw new CoinException("Coin was not found with id: "+id);
+		}
+		return coin;
 	}
 
 	@Override
 	public Coins addCoin(CoinDto coindto) throws CoinException {
+		if(helper.checkIfCoinIsThere(coindto.getName())) {
+			throw new CoinException("Coin was already there in the db : "+coindto.getName());
+		}
+		
 		Coins coin = new Coins();
 		coin.setCryptoName(coindto.getName());
 		coin.setPrice(Double.parseDouble(coindto.getPrice()));
@@ -71,6 +84,10 @@ public class CoinServiceImpl implements CoinService {
 	@Override
 	public Coins deleteCoinById(Integer id) throws CoinException {
 		Coins coin = getCoinById(id);
+		if(coin==null) {
+			throw new CoinException("Coin was not found with id: "+id);
+		}
+		
 		coinRepository.deleteById(id);
 		return coin;
 	}

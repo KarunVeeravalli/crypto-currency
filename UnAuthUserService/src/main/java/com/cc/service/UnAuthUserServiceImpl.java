@@ -3,6 +3,7 @@ package com.cc.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,27 +12,31 @@ import com.cc.entity.UnAuthUser;
 import com.cc.exception.AdminException;
 import com.cc.exception.UnAuthUserException;
 import com.cc.repository.UnAuthUserRepository;
+import com.cc.util.RepoHelper;
 
 @Service
 public class UnAuthUserServiceImpl implements UnAuthUserService{
 	
 	@Autowired
 	UnAuthUserRepository repository;
-
+	
+	@Autowired
+	RepoHelper helper;
+	
 	@Override
 	public UnAuthUser addUnAuthUser(RegistrationDto dto) throws UnAuthUserException {
 		UnAuthUser user = new UnAuthUser();
-		user.setFirstName(dto.getFirstName());
-		user.setLastName(dto.getLastName());
-		user.setAadhaarNumber(dto.getAadhaarNumber());
-		user.setPanCardNumber(dto.getPanCardNumber());
-		user.setAadhaarCard(dto.getAadhaarCard());
-		user.setPanCard(dto.getPanCard());
-		user.setAbout(dto.getAbout());
+//		user.setFirstName(dto.getFirstName());
+//		user.setLastName(dto.getLastName());
+//		user.setAadhaarNumber(dto.getAadhaarNumber());
+//		user.setPanCardNumber(dto.getPanCardNumber());
+//		user.setAadhaarCard(dto.getAadhaarCard());
+//		user.setPanCard(dto.getPanCard());
+//		user.setAbout(dto.getAbout());
 		user.setEmail(dto.getEmail());
 		user.setPassword(dto.getPassword());
-		user.setImage(dto.getImage());
-		user.setMobileNumber(dto.getMobileNumber());
+//		user.setImage(dto.getImage());
+//		user.setMobileNumber(dto.getMobileNumber());
 		user.setStatus("PENDING");
 		user.setCreatedAt(LocalDateTime.now());
 		return repository.save(user);
@@ -65,6 +70,14 @@ public class UnAuthUserServiceImpl implements UnAuthUserService{
 		user.setStatus("REJECTED");
 		repository.save(user);
 		return "REJECTED";
+	}
+
+	@Override
+	public UnAuthUser updateUserById(Integer id, RegistrationDto dto) throws UnAuthUserException {
+		UnAuthUser oldUnAuthUser = getUnAuthUserById(id);
+		BeanUtils.copyProperties(dto, oldUnAuthUser, helper.getNullPropertyNames(dto));
+		
+		return repository.save(oldUnAuthUser);
 	}
 
 }

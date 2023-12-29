@@ -44,6 +44,7 @@ public class CoinWalletController {
 //		return ResponseEntity.ok(generalResponse);
 //	}
 //	
+	
 	@GetMapping("/getCoinWallet/{coinWalletId}")
 	public ResponseEntity<GeneralResponse> getCoinWallet(@PathVariable Integer coinWalletId) throws CoinWalletException,UserException{
 		GeneralResponse generalResponse = new GeneralResponse();
@@ -52,6 +53,8 @@ public class CoinWalletController {
 		return ResponseEntity.ok(generalResponse);
 	}
 	
+	
+    
 	@GetMapping("/getCoinWalletByUserId/{userId}")
 	public CoinWallet getCoinWalletByUserId(@PathVariable Integer userId) throws CoinWalletException,UserException{
 		return service.getCoinWalletByUserId(userId);

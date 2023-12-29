@@ -22,8 +22,11 @@ public interface UnAuthUserExternalService {
 	@GetMapping("/unauth/getUnAuthUserById/{id}")
 	public UnAuthUser getUnAuthUserById(@PathVariable Integer id);
 	
-	@DeleteMapping("/unauth/deleteUser/{id}")
-	public ResponseEntity<GeneralResponse> deleteUser(@PathVariable Integer id) ;
+	@DeleteMapping("/unauth/deleteUnAuthUserById/{id}")
+	public UnAuthUser deleteUnAuthUserById(@PathVariable Integer id) ;
+	
+//	@DeleteMapping("/unauth/deleteUser/{id}")
+//	public ResponseEntity<GeneralResponse> deleteUser(@PathVariable Integer id) ;
 	
 	@PutMapping("/unauth/rejectUserById/{id}")
 	public String rejectUserById(@PathVariable Integer id);
