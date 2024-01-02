@@ -1,12 +1,15 @@
 package com.cc.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,10 +28,13 @@ import com.cc.feignClient.EmailExternalService;
 import com.cc.feignClient.UnAuthUserExternalService;
 import com.cc.service.AuthService;
 import com.cc.service.UnauathUserService;
-import com.netflix.discovery.converters.Auto;
+
+import jakarta.ws.rs.Consumes;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth" )
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+@Consumes(MediaType.APPLICATION_JSON_VALUE)
 public class SecurityController {
     @Autowired
     private AuthService service;
@@ -75,9 +81,11 @@ public class SecurityController {
     		return "retry again, otp is incorrect";
     	}
     }
-
+    
+    @CrossOrigin
     @PostMapping("/token")
     public String getToken(@RequestBody AuthRequest authRequest) {
+    	System.out.println(LocalDateTime.now()+"in token method");
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authenticate.isAuthenticated()) {
             return service.generateToken(authRequest.getUsername());

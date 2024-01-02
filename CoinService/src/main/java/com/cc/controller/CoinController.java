@@ -19,6 +19,10 @@ import com.cc.entites.Coins;
 import com.cc.exception.CoinException;
 import com.cc.service.CoinService;
 import com.cc.utilityHelper.GeneralResponse;
+import com.cc.utilityHelper.JwtService;
+import com.cc.utilityHelper.RepoHelper;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/coin")
@@ -28,6 +32,12 @@ public class CoinController {
 	
 	@Autowired
 	CoinService service;
+	
+	@Autowired
+	JwtService jwtService;
+	
+	@Autowired
+	RepoHelper helper;
 	
 	@GetMapping("/getCoinById/{id}")
 	public Coins getCoinById(@PathVariable Integer id) throws CoinException{
@@ -60,8 +70,10 @@ public class CoinController {
 	}
 	
 	@GetMapping("/getAllCoins")
-	public ResponseEntity<GeneralResponse> getAllCoins() throws CoinException{
+	public ResponseEntity<GeneralResponse> getAllCoins(HttpServletRequest request) throws CoinException{
 		GeneralResponse generalResponse = new GeneralResponse();
+		String usermail = helper.getUsernameFromToken(request);
+        System.out.println(usermail);
 		generalResponse.setMessage("Coins was Found ");
 		generalResponse.setData(service.getAllCoins());
 		return ResponseEntity.ok(generalResponse);

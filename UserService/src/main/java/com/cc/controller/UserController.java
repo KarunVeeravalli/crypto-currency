@@ -1,5 +1,7 @@
 package com.cc.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,6 +45,7 @@ public class UserController {
 	public UsersDto getOnlyUser(@PathVariable Integer id) throws UsersException{
 		return service.getOnlyUserDetailsDto(id);
 	}
+	
 	
 	 public ResponseEntity<GeneralResponse> ratingHotelFallback(String userId, Exception ex) {
        ex.printStackTrace();
