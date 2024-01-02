@@ -36,4 +36,6 @@ public interface UsersService {
 	public LoginDto getCredentials(String email) throws UsersException;
 
 	public UsersDto getOnlyUserDetailsDto(Integer id) throws UsersException;
+
+	public UsersDto getOnlyUserDetailsDtoByUserName(String userName) throws UsersException;
 }

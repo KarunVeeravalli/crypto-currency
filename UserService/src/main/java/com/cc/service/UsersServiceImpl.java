@@ -194,6 +194,15 @@ public class UsersServiceImpl implements UsersService {
 		}
 		return dto;
 	}
+	@Override
+	public UsersDto getOnlyUserDetailsDtoByUserName(String userName) throws UsersException {
+		Users user = repository.findByUsername(userName);
+		UsersDto dto = new UsersDto();
+		dto.setEmail(user.getEmail());
+		dto.setMobileNumber(user.getMobileNumber());
+		dto.setPanNum(user.getPanNum());
+		return dto;
+	}
 	
 	
 
