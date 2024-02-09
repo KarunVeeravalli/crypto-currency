@@ -88,6 +88,9 @@ public class SecurityController {
     	System.out.println(LocalDateTime.now()+"in token method");
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authenticate.isAuthenticated()) {
+        	EmailDto dto =  new EmailDto();
+        	dto.setToEmail(authRequest.getUsername());
+        	emailExternalService.sendLoginText(dto);
             return service.generateToken(authRequest.getUsername());
         } else {
             throw new RuntimeException("invalid access");

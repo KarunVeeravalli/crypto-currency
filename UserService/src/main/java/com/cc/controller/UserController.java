@@ -1,7 +1,5 @@
 package com.cc.controller;
 
-import java.security.Principal;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +22,7 @@ import com.cc.service.UsersService;
 import com.cc.utilityHelper.GeneralResponse;
 
 import io.github.resilience4j.retry.annotation.Retry;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -34,16 +33,22 @@ public class UserController {
 	
 	@GetMapping("/getUser/{id}")
    @Retry(name = "ratingHotelService", fallbackMethod = "ratingHotelFallback")
-	public ResponseEntity<GeneralResponse> getUser( @PathVariable Integer id) throws UsersException{
+	public ResponseEntity<GeneralResponse> getUser( @PathVariable Integer id,HttpServletRequest request) throws UsersException{
 		GeneralResponse generalResponse = new GeneralResponse();
 		generalResponse.setMessage("User was Found by user Id: "+id);
-		generalResponse.setData(service.getUser(id));
+		generalResponse.setData(service.getUser(id,request));
 		return ResponseEntity.ok(generalResponse);
 	}
 	
 	@GetMapping("/getOnlyUser/{id}")
-	public UsersDto getOnlyUser(@PathVariable Integer id) throws UsersException{
-		return service.getOnlyUserDetailsDto(id);
+	public UsersDto getOnlyUser(@PathVariable Integer id,HttpServletRequest request) throws UsersException{
+		return service.getOnlyUserDetailsDto(id,request);
+	}
+	
+
+	@GetMapping("/getOnlyUser")
+	public UsersDto getOnlyUser(HttpServletRequest request) throws UsersException{
+		return service.getOnlyUserDetailsDto(request);
 	}
 	
 	
@@ -56,63 +61,63 @@ public class UserController {
     }
 	
 	@PostMapping("/addUser")
-	public Users addUser(@RequestBody UsersDto dto) throws UsersException{
-		return (service.addUser(dto));
+	public Users addUser(@RequestBody UsersDto dto,HttpServletRequest request) throws UsersException{
+		return (service.addUser(dto,request));
 	}
 	
 	@PutMapping("/updateUser/{id}")
-	public ResponseEntity<GeneralResponse> updateUser(@RequestBody UsersDto newUserDetails,@PathVariable Integer id) throws UsersException{
+	public ResponseEntity<GeneralResponse> updateUser(@RequestBody UsersDto newUserDetails,@PathVariable Integer id,HttpServletRequest request) throws UsersException{
 		GeneralResponse generalResponse = new GeneralResponse();
 		generalResponse.setMessage("User was Updated by user Id: "+id);
-		generalResponse.setData(service.updateUser(newUserDetails, id));
+		generalResponse.setData(service.updateUser(newUserDetails, id,request));
 		return ResponseEntity.ok(generalResponse);
 	}
 	
 	@DeleteMapping("/deleteUser/{id}")
-	public ResponseEntity<GeneralResponse> deleteUser(@PathVariable Integer id) throws UsersException{
+	public ResponseEntity<GeneralResponse> deleteUser(@PathVariable Integer id,HttpServletRequest request) throws UsersException{
 		GeneralResponse generalResponse = new GeneralResponse();
 		generalResponse.setMessage("User was deleted by user Id: "+id);
-		generalResponse.setData(service.deleteUser(id));
+		generalResponse.setData(service.deleteUser(id,request));
 		return ResponseEntity.ok(generalResponse);
 	}
 	
 	@GetMapping("/getAllUsers")
-	public ResponseEntity<GeneralResponse> getAllUsers() throws UsersException{
+	public ResponseEntity<GeneralResponse> getAllUsers(HttpServletRequest request) throws UsersException{
 		GeneralResponse generalResponse = new GeneralResponse();
 		generalResponse.setMessage("Find the below users");
-		generalResponse.setData(service.getAllUsers());
+		generalResponse.setData(service.getAllUsers(request));
 		return ResponseEntity.ok(generalResponse);
 	}
 	
 	@PutMapping("/changePassword/{id}")
-	public ResponseEntity<GeneralResponse> changePassword(@RequestBody PasswordChangeDto dto,@PathVariable Integer id) throws UsersException{
+	public ResponseEntity<GeneralResponse> changePassword(@RequestBody PasswordChangeDto dto,@PathVariable Integer id,HttpServletRequest request) throws UsersException{
 		GeneralResponse generalResponse = new GeneralResponse();
 		generalResponse.setMessage("User password was changed by user Id: "+id);
-		generalResponse.setData(service.changePassword(dto,id));
+		generalResponse.setData(service.changePassword(dto,id,request));
 		return ResponseEntity.ok(generalResponse);
 	}
 	
 	@GetMapping("/getAllUnAuthUsers/{id}")
-	public ResponseEntity<GeneralResponse> getAllUnAuthUsers(@PathVariable Integer id) throws UsersException,AdminException {
+	public ResponseEntity<GeneralResponse> getAllUnAuthUsers(@PathVariable Integer id,HttpServletRequest request) throws UsersException,AdminException {
 		GeneralResponse generalResponse = new GeneralResponse();
 		generalResponse.setMessage("UnAUthUsers Found with Admin ID : "+id);
-		generalResponse.setData(service.getAllUnAuthUsers(id));
+		generalResponse.setData(service.getAllUnAuthUsers(id,request));
 		return ResponseEntity.ok(generalResponse);
 	}
 	
 	@PostMapping("/addUserByUnauthUser/{id}/{unauthId}")
-	public Users addUserByUnauthUser(@PathVariable Integer id,@PathVariable Integer unauthId) throws UsersException,UnAuthUserException,AdminException{
-		return service.addUserByUnauthUser(id, unauthId);
+	public Users addUserByUnauthUser(@PathVariable Integer id,@PathVariable Integer unauthId,HttpServletRequest request) throws UsersException,UnAuthUserException,AdminException{
+		return service.addUserByUnauthUser(id, unauthId,request);
 	}
 	
 	@PutMapping("/rejectUnAuthUser/{id}/{unauthId}")
-	public String rejectUnAuthUser(@PathVariable Integer id,@PathVariable Integer unauthId) throws UsersException, UnAuthUserException, AdminException {
-		return service.rejectUnAuthUser(id, unauthId);
+	public String rejectUnAuthUser(@PathVariable Integer id,@PathVariable Integer unauthId,HttpServletRequest request) throws UsersException, UnAuthUserException, AdminException {
+		return service.rejectUnAuthUser(id, unauthId,request);
 	}
 	
 	@GetMapping("/getCredentials/{email}")
-	public LoginDto getCredentials(@PathVariable String email) throws UsersException{
-		return service.getCredentials(email);
+	public LoginDto getCredentials(@PathVariable String email,HttpServletRequest request) throws UsersException{
+		return service.getCredentials(email,request);
 	}
 	
 	

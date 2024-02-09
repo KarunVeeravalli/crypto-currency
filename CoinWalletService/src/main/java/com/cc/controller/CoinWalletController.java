@@ -1,5 +1,7 @@
 package com.cc.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cc.dto.AddCoinToWalletDto;
+import com.cc.dto.CoinDto;
 import com.cc.dto.SellingCoinFromWalletDto;
+import com.cc.entity.Coin;
 import com.cc.entity.CoinWallet;
 import com.cc.exception.CoinException;
 import com.cc.exception.CoinWalletException;
@@ -88,7 +92,15 @@ public class CoinWalletController {
 	public CoinWallet addCoinWallet(@PathVariable Integer userId ) throws CoinException,CoinWalletException,UserException{
 		return (service.addCoinWallet(userId));
 	}
-
 	
+	@GetMapping("/getAllCoinsByUserId/{userId}")
+	public List<Coin> getAllCoinsByUserId(@PathVariable Integer userId) throws CoinException,CoinWalletException,UserException{
+		return (service.getAllCoinsByUserId(userId));
+	}
+	
+	@GetMapping("/getAllCoinsFromWalletByUserId/{userId}")
+	public List<CoinDto> getAllCoinsFromWalletByUserId(@PathVariable Integer userId) throws CoinWalletException,UserException,CoinException{
+		return service.getAllCoinsFromWalletByUserId(userId);
+	}
 	
 }

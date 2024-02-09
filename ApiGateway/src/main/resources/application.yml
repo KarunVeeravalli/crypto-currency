@@ -55,6 +55,8 @@ spring:
           uri: lb://SECURITY-SERVICE
           predicates:
             - Path=/auth/**
+#          filters:
+#            - AddResponseHeader=Access-Control-Allow-Origin, *
         
        
         

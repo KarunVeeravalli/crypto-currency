@@ -94,7 +94,15 @@ public class CoinServiceImpl implements CoinService {
 
 	@Override
 	public List<Coins> getAllCoins() throws CoinException {
-		return coinRepository.findAll();
+		List<Coins> coins = coinRepository.findAll();
+		coins.remove(0);
+		return coins;
+	}
+
+	@Override
+	public List<Coins> getTopTen() throws CoinException {
+		List<Coins> coins = getAllCoins();
+		return coins.subList(1, 11);
 	}
 
 }

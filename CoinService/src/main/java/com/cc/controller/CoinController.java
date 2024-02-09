@@ -78,6 +78,15 @@ public class CoinController {
 		generalResponse.setData(service.getAllCoins());
 		return ResponseEntity.ok(generalResponse);
 	}
-	
+		
+	@GetMapping("/getTopTen")
+	public ResponseEntity<GeneralResponse> getTopTen(HttpServletRequest request) throws CoinException{
+		GeneralResponse generalResponse = new GeneralResponse();
+		String usermail = helper.getUsernameFromToken(request);
+        System.out.println(usermail);
+		generalResponse.setMessage("Coins was Found ");
+		generalResponse.setData(service.getTopTen());
+		return ResponseEntity.ok(generalResponse);
+	}
 
 }

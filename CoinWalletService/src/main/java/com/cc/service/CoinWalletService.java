@@ -1,7 +1,11 @@
 package com.cc.service;
 
+import java.util.List;
+
 import com.cc.dto.AddCoinToWalletDto;
+import com.cc.dto.CoinDto;
 import com.cc.dto.SellingCoinFromWalletDto;
+import com.cc.entity.Coin;
 import com.cc.entity.CoinWallet;
 import com.cc.exception.CoinException;
 import com.cc.exception.CoinWalletException;
@@ -23,5 +27,8 @@ public interface CoinWalletService {
 	CoinWallet deleteCryptoCoinsFromWalletByAmount(SellingCoinFromWalletDto dto) throws CoinException,CoinWalletException,UserException;
 	
 	CoinWallet addCoinWallet(Integer userId) throws CoinWalletException,UserException;
-
+	
+	List<Coin> getAllCoinsByUserId(Integer userId) throws CoinWalletException,UserException,CoinException;
+	
+	List<CoinDto> getAllCoinsFromWalletByUserId(Integer userId) throws CoinWalletException,UserException,CoinException;
 }

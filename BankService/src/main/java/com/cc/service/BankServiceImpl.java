@@ -65,9 +65,9 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public Bank getBankById(Integer bankId) throws BankException {
-		if(helper.checkIfBankIsThereByBankId(bankId)) {
-			throw new BankException("No bank Was found with bank Id: "+bankId);
-		}
+//		if(helper.checkIfBankIsThereByBankId(bankId)) {
+//			throw new BankException("No bank Was found with bank Id: "+bankId);
+//		}
 		return repository.findById(bankId).orElseThrow(()->new BankException("Bank not Found with Id: "+bankId));
 	}
 
@@ -82,17 +82,17 @@ public class BankServiceImpl implements BankService {
 	
 	@Override
 	public Bank getBankByAccountNumber(Long bankAccNum) throws BankException {
-		if(!helper.checkIfBankIsThere(bankAccNum)) {
-			throw new BankException("bank was not found with bank Account number : "+bankAccNum);
-		}
+//		if(!helper.checkIfBankIsThere(bankAccNum)) {
+//			throw new BankException("bank was not found with bank Account number : "+bankAccNum);
+//		} 
 		return repository.findByBankAccountNumber(bankAccNum);
 	}
 
 	@Override
 	public Bank addMoneyToBankFromWallet(WalletToBankDto dto) throws BankException {
-		if(!helper.checkIfBankIsThere(dto.getBankAccountNumber())) {
-			throw new BankException("bank was not found with bank Account number : "+dto.getBankAccountNumber());
-		}
+//		if(!helper.checkIfBankIsThere(dto.getBankAccountNumber())) {
+//			throw new BankException("bank was not found with bank Account number : "+dto.getBankAccountNumber());
+//		}
 		Bank bank = getBankByAccountNumber(dto.getBankAccountNumber());
 		Transaction transaction = new Transaction();
 		transaction.setFromWallet(dto.getWalletId());
@@ -110,9 +110,9 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public Bank sendMoneyFromBankToWallet(WalletToBankDto dto) throws BankException {
-		if(!helper.checkIfBankIsThere(dto.getBankAccountNumber())) {
-			throw new BankException("bank was not found with bank Account number : "+dto.getBankAccountNumber());
-		}
+//		if(!helper.checkIfBankIsThere(dto.getBankAccountNumber())) {
+//			throw new BankException("bank was not found with bank Account number : "+dto.getBankAccountNumber());
+//		}
 		Bank bank = getBankByAccountNumber(dto.getBankAccountNumber());
 		Transaction transaction = new Transaction();
 		transaction.setFromWallet(dto.getWalletId());

@@ -9,6 +9,6 @@ import com.cc.dto.UsersDto;
 @FeignClient("USER-SERVICE")
 public interface UserExternalService {
 	
-	@GetMapping("/getOnlyUser/{id}")
+	@GetMapping("/user/getOnlyUser/{id}")
 	public UsersDto getOnlyUser(@PathVariable Integer id);
 }

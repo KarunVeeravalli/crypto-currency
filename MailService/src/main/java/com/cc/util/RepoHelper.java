@@ -1,6 +1,7 @@
 package com.cc.util;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+import jakarta.mail.BodyPart;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeBodyPart;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Component
@@ -61,6 +65,42 @@ public class RepoHelper {
 				+ "\n"
 				+" "   + otp+" is your SECRET OTP for Accessing our Coin Currency at Browser on "+ LocalDate.now() +",  OTP valid for 5 mins.Pls do not share OTP with anyone.\n"
 				+ "\n"
+				+ "\n"
+				+"\n"
+				+ "In case you have any queries / clarifications, please call us at our Customer Service number :\n"
+				+ "\n"
+				+ "8340018900\n"
+				+ "8340018900\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"+" Thank You For Using our Coin Currency :) ";
+		
+		return body;
+	}
+	
+public String getLoginMsg(String mail)  {
+		
+		System.out.println(mail);
+		
+		
+		String body = "Dear Customer,\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"
+				+ "\n"
+				+" "   +"There's been a new sign-in to your Coin Currency account associated with the email address "
+				+ "\n"+
+				mail +",  on "+ LocalDateTime.now()+ ".\n"
+				+ "\n"
+				+ "If this wasn't you, you need to change your Coin Currency account password to protect your account."
+				+ "\n"
+				+ "\n"+
+				    "https://change password"
+			    
 				+ "In case you have any queries / clarifications, please call us at our Customer Service number :\n"
 				+ "\n"
 				+ "8340018900\n"

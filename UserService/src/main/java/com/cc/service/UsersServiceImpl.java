@@ -29,6 +29,8 @@ import com.cc.repository.UserRepository;
 import com.cc.utilityHelper.GeneralResponse;
 import com.cc.utilityHelper.RepoHelper;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Service
 public class UsersServiceImpl implements UsersService {
 	
@@ -54,7 +56,9 @@ public class UsersServiceImpl implements UsersService {
 	RepoHelper helper;
 
 	@Override
-	public Users getUser(Integer id) throws UsersException {
+	public Users getUser(Integer id,HttpServletRequest request) throws UsersException {
+		
+		
 		Users user = repository.findById(id).get();
 		List<Bank> banks = externalServices.getAllBanksByUserId(id); 
 		Wallet wallet = walletExternalService.getWalletByUserId(id);
@@ -68,7 +72,7 @@ public class UsersServiceImpl implements UsersService {
 		return user;		
 	}
 	@Override
-	public Users addUser(UsersDto dto) throws UsersException {
+	public Users addUser(UsersDto dto,HttpServletRequest request) throws UsersException {
 		Users user = new Users();
 //		user.setUsername(dto.getFirstname()+dto.getMobileNumber().toString().substring(0, 3));
 //		user.setAadhar(dto.getAadhar());
@@ -89,16 +93,16 @@ public class UsersServiceImpl implements UsersService {
 	}
 
 	@Override
-	public Users updateUser(UsersDto newUserDetails, Integer id) throws UsersException {
-		Users oldUserDetails = getUser(id); 
+	public Users updateUser(UsersDto newUserDetails, Integer id,HttpServletRequest request) throws UsersException {
+		Users oldUserDetails = getUser(id,request); 
 		oldUserDetails.setUsername(newUserDetails.getFirstname()+newUserDetails.getMobileNumber().toString().substring(0, 3));;
 		BeanUtils.copyProperties(newUserDetails, oldUserDetails, helper.getNullPropertyNames(newUserDetails));
 		return repository.save(oldUserDetails);
 	}
 
 	@Override
-	public Users deleteUser(Integer id) throws UsersException {
-		Users user = getUser(id);
+	public Users deleteUser(Integer id,HttpServletRequest request) throws UsersException {
+		Users user = getUser(id,request);
 		walletExternalService.deleteWalletById(user.getWallet().getId());
 		coinWalletExternalService.deleteCoinWallet(user.getCoinWallet().getId());
 		repository.deleteById(id);
@@ -106,21 +110,21 @@ public class UsersServiceImpl implements UsersService {
 	}
 
 	@Override
-	public List<Users> getAllUsers() throws UsersException {
+	public List<Users> getAllUsers(HttpServletRequest request) throws UsersException {
 		return repository.findAll();
 	}
 
 	@Override
-	public Users changePassword(PasswordChangeDto dto,Integer id) throws UsersException {
-		Users user = getUser(id);
+	public Users changePassword(PasswordChangeDto dto,Integer id,HttpServletRequest request) throws UsersException {
+		Users user = getUser(id,request);
 	 	 if(dto.getCurrentPassword().equals(user.getEncodedPassword())) {
 				user.setEncodedPassword(dto.getNewPassword());
 	 	 }
 	 	 return repository.save(user);
 	}
 	@Override
-	public List<UnAuthUser> getAllUnAuthUsers(Integer id) throws UsersException,AdminException {
-		Users admin = getOnlyUserDetails(id);
+	public List<UnAuthUser> getAllUnAuthUsers(Integer id,HttpServletRequest request) throws UsersException,AdminException {
+		Users admin = getOnlyUserDetails(id,request);
 		if(admin.getRole().equals("ADMIN")) {
 
 			return unAuthUserExternalService.getUnauAuthUserByStatus("PENDING");
@@ -129,13 +133,13 @@ public class UsersServiceImpl implements UsersService {
 		}
 	}
 	@Override
-	public Users addUserByUnauthUser(Integer id, Integer unauthId)
+	public Users addUserByUnauthUser(Integer id, Integer unauthId,HttpServletRequest request)
 			throws UsersException, UnAuthUserException, AdminException {
 		UnAuthUser unAuthUser = unAuthUserExternalService.getUnAuthUserById(unauthId);
 		if(unAuthUser.equals(null)) {
 			throw new UnAuthUserException("UnAuthUser is not found with id: "+unauthId);
 		}
-		Users admin =  getOnlyUserDetails(id);
+		Users admin =  getOnlyUserDetails(id,request);
 		if(admin.getRole().equals("ADMIN") ){
 			Users user =  new Users();
 			user.setFirstname(unAuthUser.getFirstName());
@@ -160,9 +164,9 @@ public class UsersServiceImpl implements UsersService {
 		
 	}
 	@Override
-	public String rejectUnAuthUser(Integer id, Integer unauthId)
+	public String rejectUnAuthUser(Integer id, Integer unauthId,HttpServletRequest request)
 			throws UsersException, UnAuthUserException, AdminException {
-		Users admin = getUser(id);
+		Users admin = getUser(id,request);
 		if(admin.getRole().equals("ADMIN")) {
 			String msg = unAuthUserExternalService.rejectUserById(unauthId);
 			return msg+" the coustomer by id: "+id;
@@ -171,7 +175,7 @@ public class UsersServiceImpl implements UsersService {
 		}	
 	}
 	@Override
-	public LoginDto getCredentials(String email) throws UsersException {
+	public LoginDto getCredentials(String email,HttpServletRequest request) throws UsersException {
 		Users user = repository.findByEmail(email);
 		LoginDto dto = new LoginDto();
 		dto.setEmail(user.getEmail());
@@ -179,13 +183,13 @@ public class UsersServiceImpl implements UsersService {
 		return dto;
 	}
 	@Override
-	public Users getOnlyUserDetails(Integer id) throws UsersException {
+	public Users getOnlyUserDetails(Integer id,HttpServletRequest request) throws UsersException {
 		return repository.findById(id).get();
 	}
 	@Override
-	public UsersDto getOnlyUserDetailsDto(Integer id) throws UsersException {
+	public UsersDto getOnlyUserDetailsDto(Integer id,HttpServletRequest request) throws UsersException {
 		UsersDto dto = new UsersDto();
-		Users user = getOnlyUserDetails(id);
+		Users user = getOnlyUserDetails(id,request);
 		dto.setEmail(user.getEmail());
 		dto.setMobileNumber(user.getMobileNumber());
 		dto.setPanNum(user.getPanNum());
@@ -195,12 +199,23 @@ public class UsersServiceImpl implements UsersService {
 		return dto;
 	}
 	@Override
-	public UsersDto getOnlyUserDetailsDtoByUserName(String userName) throws UsersException {
+	public UsersDto getOnlyUserDetailsDtoByUserName(String userName,HttpServletRequest request) throws UsersException {
 		Users user = repository.findByUsername(userName);
 		UsersDto dto = new UsersDto();
 		dto.setEmail(user.getEmail());
 		dto.setMobileNumber(user.getMobileNumber());
 		dto.setPanNum(user.getPanNum());
+		return dto;
+	}
+	@Override
+	public UsersDto getOnlyUserDetailsDto(HttpServletRequest request) throws UsersException {
+		String email  = helper.getUsernameFromToken(request);
+		UsersDto dto = new UsersDto();
+		Users user = repository.findByEmail(email);
+		dto.setEmail(user.getEmail());
+		dto.setMobileNumber(user.getMobileNumber());
+		dto.setPanNum(user.getPanNum());
+		dto.setId(user.getId());
 		return dto;
 	}
 	

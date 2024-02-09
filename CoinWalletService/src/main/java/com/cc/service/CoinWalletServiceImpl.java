@@ -1,16 +1,21 @@
 package com.cc.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cc.dto.AddCoinToWalletDto;
 import com.cc.dto.Btw;
+import com.cc.dto.CoinDto;
 import com.cc.dto.SellingCoinFromWalletDto;
 import com.cc.entity.Coin;
 import com.cc.entity.CoinWallet;
+import com.cc.entity.CoinsAndAmount;
 import com.cc.entity.Wallet;
 import com.cc.exception.CoinException;
 import com.cc.exception.CoinWalletException;
@@ -20,6 +25,7 @@ import com.cc.feignServices.CoinExternalService;
 import com.cc.feignServices.UserExternalService;
 import com.cc.feignServices.WalletExternalService;
 import com.cc.repository.CoinWalletRepository;
+import com.cc.utilityHelper.RepoHelper;
 
 @Service
 public class CoinWalletServiceImpl implements CoinWalletService{
@@ -34,7 +40,10 @@ public class CoinWalletServiceImpl implements CoinWalletService{
 	
 	@Autowired
 	UserExternalService userExternalService;
-
+	
+	@Autowired
+	RepoHelper helper;
+	
 	@Override
 	public CoinWallet addCryptoCoinsToWalletByQuantity(AddCoinToWalletDto dto)
 			throws CoinException, CoinWalletException, UserException, WalletException {
@@ -60,6 +69,27 @@ public class CoinWalletServiceImpl implements CoinWalletService{
 					coinWallet.setTotalCryptoValue(coinWalletAmount);
 					coinWallet.setProfit(coinWalletAmount-coinWalletInvestedAmount);
 				}
+				//newly added this for testing
+				if(coinWallet.getCoinIds()==null) {
+					coinWallet.setCoinIds(new HashMap<>());
+				}
+				
+				CoinsAndAmount old = coinWallet.getCoinIds().get(coin.getId());
+				CoinsAndAmount coinsAndAmount =  new CoinsAndAmount();
+				if(old!=null) {
+					coinsAndAmount.setPrice(old.getPrice()+coin.getPrice());
+					coinsAndAmount.setQuantity(old.getQuantity()+ dto.getQuantity());
+				}
+				else {
+					coinsAndAmount.setPrice(coin.getPrice());
+					coinsAndAmount.setQuantity(dto.getQuantity());
+				}
+				
+				Map<Integer, CoinsAndAmount> coinData = coinWallet.getCoinIds();
+				coinData.put(coin.getId(), coinsAndAmount);
+				coinWallet.setCoinIds(coinData);
+		
+				
 				Btw btw = new Btw();
 				btw.setAccountNumber(Long.valueOf("101010101"));
 				btw.setAmount(Double.valueOf((coin.getPrice())*dto.getQuantity()));
@@ -124,9 +154,9 @@ public class CoinWalletServiceImpl implements CoinWalletService{
 
 	@Override
 	public CoinWallet addCoinWallet(Integer userId) throws CoinWalletException, UserException {
-		if(getCoinWalletByUserId(userId)!=null) {
-			throw new CoinWalletException("Coin Wallet is already there in Db with userId: "+userId);
-		}
+//		if(getCoinWalletByUserId(userId)!=null) {
+//			throw new CoinWalletException("Coin Wallet is already there in Db with userId: "+userId);
+//		}
 		
 		if(userExternalService.getOnlyUser(userId)==null) {
 			throw new UserException("User was not found with id: "+userId);
@@ -142,5 +172,41 @@ public class CoinWalletServiceImpl implements CoinWalletService{
 		coinWallet.setTotalCryptoValue(0.0);
 		return repository.save(coinWallet);
 	}
+
+	@Override
+	public List<Coin> getAllCoinsByUserId(Integer userId) throws CoinWalletException, UserException, CoinException {
+		CoinWallet coinWallet = repository.findByUserId(userId);
+		List<Integer> coinIds = coinWallet.getCoins();
+		List<Coin> coins = new ArrayList<>();
+		for(Integer coinId : coinIds) {
+			Coin coin = coinExternalService.getCoinById(coinId);
+			coins.add(coin);
+		}
+		
+		return coins;
+	}
+
+	@Override
+	public List<CoinDto> getAllCoinsFromWalletByUserId(Integer userId)
+			throws CoinWalletException, UserException, CoinException {
+		CoinWallet coinWallet = repository.findByUserId(userId);
+		List<CoinDto> dtos = new ArrayList<>();
+		Map<Integer, CoinsAndAmount> old = coinWallet.getCoinIds();
+		for (var entry : old.entrySet()) {
+			Coin coin = coinExternalService.getCoinById(entry.getKey());
+			CoinDto coinDto = new CoinDto();
+			
+			BeanUtils.copyProperties(coin, coinDto, helper.getNullPropertyNames(coin));
+			
+			coinDto.setLoot(entry.getValue().getQuantity());
+			coinDto.setPurchasedPrice(entry.getValue().getPrice());
+			dtos.add(coinDto);
+		}
+		
+		
+		return dtos;
+	}
+	
+	
 
 }

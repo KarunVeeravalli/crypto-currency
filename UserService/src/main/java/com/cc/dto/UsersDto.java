@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class UsersDto {
+	private Integer id;
 	
 	private String firstname;
 	

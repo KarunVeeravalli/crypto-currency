@@ -1,6 +1,7 @@
 package com.cc.entity;
 
 import java.util.List;
+import java.util.Map;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -25,6 +26,9 @@ public class CoinWallet {
 	
 	@ElementCollection
 	private List<Integer> coins;
+
+	@ElementCollection
+	private Map<Integer, CoinsAndAmount> coinIds;
 	
 	private Integer userId;
 	

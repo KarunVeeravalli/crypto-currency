@@ -17,5 +17,7 @@ public interface CoinService {
 	public Coins deleteCoinById(Integer id) throws CoinException;
 	
 	public List<Coins> getAllCoins() throws CoinException;
+	
+	public List<Coins> getTopTen() throws CoinException;
 
 }

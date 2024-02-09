@@ -14,6 +14,12 @@ import com.cc.entity.OtpEntity;
 import com.cc.repository.EmailRepository;
 import com.cc.util.RepoHelper;
 
+import jakarta.mail.BodyPart;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+
 @Service()
 @ServletComponentScan(basePackages = {"org.springframework.mail.javamail.JavaMailSender","com.cc.util"})
 public class EmailSenderService {
@@ -76,4 +82,29 @@ public class EmailSenderService {
 		
 		javaMailSender.send(msg);
 	}
+
+
+	public void sendLoginText(String mail) {
+		SimpleMailMessage msg = new SimpleMailMessage();
+		String fromMail = "kkarun701@gmail.com";
+		msg.setFrom(fromMail);
+		msg.setTo(mail);
+		String body = helper.getLoginMsg(mail);
+		msg.setText(body);
+		msg.setSubject("New sign-in to your coin currency account");
+		
+		
+		Email email = new Email();
+		email.setBody(body);
+		email.setFromEmail(fromMail);
+		email.setSubject("New sign-in to your coin currency account");
+		email.setToEmail(mail);
+		email.setTimeStamp(LocalDateTime.now());
+		repository.save(email);
+		
+		javaMailSender.send(msg);
+		
+	}
+	
+	
 }

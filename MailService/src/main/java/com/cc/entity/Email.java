@@ -2,6 +2,7 @@ package com.cc.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.mail.BodyPart;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
