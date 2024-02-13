@@ -88,5 +88,7 @@ public class CoinController {
 		generalResponse.setData(service.getTopTen());
 		return ResponseEntity.ok(generalResponse);
 	}
+	
+	
 
 }
