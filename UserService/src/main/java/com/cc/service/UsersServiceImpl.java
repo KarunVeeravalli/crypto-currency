@@ -57,7 +57,12 @@ public class UsersServiceImpl implements UsersService {
 
 	@Override
 	public Users getUser(Integer id,HttpServletRequest request) throws UsersException {
-		
+		try {
+			System.out.println(request.getLocalAddr());
+//			request.get
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		Users user = repository.findById(id).get();
 		List<Bank> banks = externalServices.getAllBanksByUserId(id); 
@@ -135,6 +140,8 @@ public class UsersServiceImpl implements UsersService {
 	@Override
 	public Users addUserByUnauthUser(Integer id, Integer unauthId,HttpServletRequest request)
 			throws UsersException, UnAuthUserException, AdminException {
+		
+//		request.get
 		UnAuthUser unAuthUser = unAuthUserExternalService.getUnAuthUserById(unauthId);
 		if(unAuthUser.equals(null)) {
 			throw new UnAuthUserException("UnAuthUser is not found with id: "+unauthId);
@@ -157,6 +164,7 @@ public class UsersServiceImpl implements UsersService {
 			user.setWallet(walletExternalService.addWallet(newUser.getId()));
 			user.setCoinWallet(coinWalletExternalService.addCoinWallet(newUser.getId()));
 			unAuthUserExternalService.deleteUnAuthUserById(unauthId);
+			
 			return user;
 		}else {
 			throw new AdminException("Admin not found with id: "+id);

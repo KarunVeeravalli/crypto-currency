@@ -19,6 +19,10 @@ public class RepoHelper {
 	JwtService jwtService;
 	
 	public String getUsernameFromToken(HttpServletRequest request) {
+		
+//		System.out.println(request.get);
+		System.out.println(request.getLocalAddr());
+		
 		Enumeration<String> authHeader = request.getHeaders(HttpHeaders.AUTHORIZATION);
         String token = (authHeader.nextElement());
         if (token != null && token.startsWith("Bearer ")) {
