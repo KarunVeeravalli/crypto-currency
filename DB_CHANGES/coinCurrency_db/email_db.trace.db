@@ -1,0 +1,3 @@
+2023-12-27 11:53:40.392177+05:30 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]OTP_ENTITY"; SQL statement:
+OTP_ENTITY [42000-224]
